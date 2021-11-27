@@ -20,9 +20,9 @@ end
 function TextManager:TextOutput(_Text,_UIText)
 	local _TargetText = ""
 	local i = 1
-	while i<=#_text and wait(0.07)  do
+	while i<=#_Text and wait(0.07)  do
 		asc2 = string.byte(_Text,i,i)
-		if acs2 > 127 then
+		if asc2 > 127 then
 			--汉字
 			_TargetText = _TargetText..string.sub(_Text,i,i+2)
 			_UIText.Text = _TargetText

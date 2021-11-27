@@ -9,10 +9,10 @@ local Subtitle = {}
 		co1=coroutine.create(function()
 			if first then
 			
-				local words="word"..i;
+				local words = "word"..i;
 				local message=subtitleData:GetCell(words,id);
 
-				while message ~="" do
+				while message ~= "" do
 					isPrint=true;
 					local words_data="";
 					for temp in string.gmatch(message,"[%z\1-\127\194-\244][\128-\191]*") do
