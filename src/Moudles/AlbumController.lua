@@ -67,6 +67,7 @@ function AlbumController:SavePic(objectName,recallIndex)
     return false
 end
 
+---通过slot数值来找到照片，关掉albumGUI打开详细信息GUI，交给CheckDetailController的实例处理
 ---@param slotValue number 待进入预览的slot的值
 ---@return void
 function AlbumController:ToDetail(slotValue)
