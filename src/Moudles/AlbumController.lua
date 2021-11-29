@@ -21,10 +21,12 @@ function AlbumController:new(o,albumGUI,detailGUI)
     ---开始初始化slot
     self.slots = {}
     self.currentSlot = 0
+    self.pressFunc = {}
     for _, v in ipairs(albumGUI:GetChildren()) do
         if v.ClassName == 'UiFigureObject' then
             if v:GetChild('SlotIndex') ~= nil then
                 table.insert(self.slots,v)
+                table.insert(self.pressFunc,function() self:ToDetail(v:GetChild('SlotIndex').Value) end)
             end
         end
     end
@@ -192,13 +194,15 @@ function AlbumController:Refresh()
             end
         end
     end
+	
 
-    for _,slot in ipairs(self.slots) do
+
+    for i,slot in ipairs(self.slots) do
 
         if slot:FindFirstChildByType('UiImageObject') == nil then
-            slot:GetChild('CheckDetailBtn').OnClick:Disconnect(function() self:ToDetail(slot:GetChild('SlotIndex').Value) end)
+            slot:GetChild('CheckDetailBtn').OnClick:Disconnect(self.pressFunc[i])
         else
-            slot:GetChild('CheckDetailBtn').OnClick:Connect(function() self:ToDetail(slot:GetChild('SlotIndex').Value) end)
+            slot:GetChild('CheckDetailBtn').OnClick:Connect(self.pressFunc[i])
         end
 
     end
