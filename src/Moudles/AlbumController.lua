@@ -4,7 +4,7 @@
 --- DateTime: 2021/11/28 22:38
 ---
 
-require('Moudles/Utils')
+Utils = require('Moudles/Utils')
 
 ---@class AlbumController 相册控制器，传入两个gui，在初始化的时候会初始化CheckDetailController类
 AlbumController = {}
@@ -63,6 +63,9 @@ function AlbumController:SavePic(objectName,recallIndex)
                             local cloned = picture:Clone(slot,false)
                             ---改变尺寸，名字为物体名方便查找
                             cloned.Size = Vector2(600,338)
+                            ---改变图层位置
+                            cloned:Up()
+                            cloned:Up()
                             return true
                         end
                     end
@@ -85,7 +88,7 @@ function AlbumController:ToDetail(slotValue)
     end
     self.currentSlot = slotValue
     local targetSlot = self.slots[slotValue]
-	print(slotValue)
+	--print(slotValue)
     local picture = targetSlot:FindFirstChildByType('UiImageObject')
     if picture ~= nil then
         assert(self.detailGUI:GetChild('Photo'),"文件结构错误")
@@ -144,6 +147,7 @@ function AlbumController:Recall()
                     slot:FindFirstChildByType('UiImageObject'):Destroy()
                     local recalledPicCloned =  recalledPic:Clone(slot,false)
                     self:ToDetail(slot:GetChild('SlotIndex').Value)
+                    print(currentRecallIndex)
                     break
                 end
             end
@@ -154,18 +158,24 @@ end
 ---将某个slot的照片转移到另一个slot中
 ---@return void 若参数错误，不会转移
 function AlbumController:Transfer(startSlotIndex,targetSlotIndex)
+	print('Transfer called!')
     local startSlot = self.slots[startSlotIndex]
     local targetSlot = self.slots[targetSlotIndex]
+    assert(startSlot)
+    assert(targetSlot)
     if (startSlot ~= nil) and (targetSlot ~= nil) then
         ---检查start是否有照片
-        if startSlot:FindFirstChildByType('UiImageObject') ~= nil then
+        if startSlot:FindFirstChildByType('UiImageObject') == nil then
+			print("失败！，转移的格子没有照片！")
             return
         end
         ---检查target是否没照片
-        if targetSlot:FindFirstChildByType('UiImageObject') ~= nil then
+        if targetSlot:FindFirstChildByType('UiImageObject') == nil then
             local picture = startSlot:FindFirstChildByType('UiImageObject')
             picture:Clone(targetSlot,false)
             picture:Destroy()
+        else
+            print("失败！，转移的格子已被占据！")
         end
     end
 end
@@ -186,8 +196,9 @@ function AlbumController:Refresh()
                     ---检查它之前的所有slot是否都不为空
                     if slotBefore:FindFirstChildByType('UiImageObject') == nil then
                         ---找到第一个不为空的slot，转移照片
-                        local slotIndex = slotBefore:GetChild('recallIndex')
-                        self:Transfer(index,slotIndex)
+                        local slotIndex = slotBefore:GetChild('SlotIndex')
+						print(index..'->'..slotIndex.Value)						
+                        self:Transfer(index,slotIndex.Value)
                         break
                     end
                 end
@@ -227,6 +238,30 @@ function AlbumController:Delete(slotIndex)
     end
     self:Refresh()
 	print('del failed')
+    return false
+end
+
+---尝试删除某个目标并返回删除结果
+---由放置系统使用
+---检查所有slot有没有照片，有照片的slot是不是此照片，检查照片的recallIndex
+---@param name string
+---@param needIndex number
+---@return boolean 删除是否成功
+function AlbumController:tryDeleteByName(name,needIndex)
+    for index, slot in ipairs(self.slots) do
+        local picture = slot:FindFirstChildByType('UiImageObject')
+        if picture ~= nil then
+            if picture.Name == name then
+                print('found!')
+                assert(picture:GetChild('recallIndex'))
+                if picture:GetChild('recallIndex').Value == needIndex then
+                    self:Delete(index)
+                    world.Resources.UI.Album:SetActive(false)
+                    return true
+                end
+            end
+        end
+    end
     return false
 end
 
