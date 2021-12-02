@@ -1,7 +1,16 @@
+PlayerController = require('Moudles/PlayerController')
 local Subtitle = {}
 	
 	function Subtitle:Meeting(id,first,text,subtitleData)
-		
+
+		PlayerController:ChooseMode()
+		PlayerController.AllowMove = false
+		PlayerController:SetDialogOn(true)
+
+		if PlayerController:IsCameraOn() or PlayerController:IsAlbumOn() or PlayerController:IsInteractionOn() then
+			return
+		end
+
 		local i=1;
 		local isPrint=true;
 		local isOver=false;
@@ -89,7 +98,8 @@ local Subtitle = {}
 		
 		Input.OnKeyDown:Disconnect(Mouse_pressDown);
 		
-
+		PlayerController:SetDefault()
+		PlayerController:SetDialogOn(false)
 
 	end
 	

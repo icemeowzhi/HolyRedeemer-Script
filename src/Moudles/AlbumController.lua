@@ -212,8 +212,10 @@ function AlbumController:Refresh()
 
         if slot:FindFirstChildByType('UiImageObject') == nil then
             slot:GetChild('CheckDetailBtn').OnClick:Disconnect(self.pressFunc[i])
+            print('disconnect '..i)
         else
             slot:GetChild('CheckDetailBtn').OnClick:Connect(self.pressFunc[i])
+            print('connect '..i)
         end
 
     end
