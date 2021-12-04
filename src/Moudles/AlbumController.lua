@@ -93,7 +93,7 @@ function AlbumController:ToDetail(slotValue)
             child:Destroy()
         end
         local cloned = picture:Clone(self.detailGUI:GetChild('Photo'),false)
-        cloned.Size = Vector2(1600,900)
+        cloned.Size = Vector2(1550,870)
         self.albumGUI:SetActive(false)
         self.detailGUI:SetActive(true)
     end

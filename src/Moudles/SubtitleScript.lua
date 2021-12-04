@@ -1,4 +1,5 @@
 PlayerController = require('Moudles/PlayerController')
+BlackScreenController = require('Moudles/BlackScreenController')
 local Subtitle = {}
 	
 	function Subtitle:Meeting(id,first,text,subtitleData)
@@ -101,5 +102,16 @@ local Subtitle = {}
 		PlayerController:SetDialogOn(false)
 
 	end
+
+function Subtitle:MeetingInBlack(id,first,text,subtitleData,dialogBeginSec,blackEndSec)
+	BlackScreenController:Black()
+	wait(dialogBeginSec)
+    world.Resources.UI.DialogGUI:SetActive(true);
+	Subtitle:Meeting(id,first,text,subtitleData)
+    BlackScreenController:Black()
+	wait(blackEndSec)
+    world.Resources.UI.DialogGUI:SetActive(false);
+	BlackScreenController:DisableBlack()
+end
 	
 return Subtitle

@@ -11,6 +11,7 @@ PlayerController.CameraOn = false
 PlayerController.AlbumOn = false
 PlayerController.DialogOn = false
 PlayerController.InteractionOn = false
+PlayerController.BlackOn = false
 
 
 
@@ -61,6 +62,14 @@ end
 
 function PlayerController:IsInteractionOn()
     return PlayerController.InteractionOn
+end
+
+function PlayerController:SetBlackOn(bool)
+    PlayerController.BlackOn = bool
+end
+
+function PlayerController:IsBlackOnOn()
+    return PlayerController.BlackOn
 end
 
 return PlayerController
