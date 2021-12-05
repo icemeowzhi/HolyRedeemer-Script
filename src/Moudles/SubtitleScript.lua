@@ -1,7 +1,16 @@
+PlayerController = require('Moudles/PlayerController')
+BlackScreenController = require('Moudles/BlackScreenController')
 local Subtitle = {}
 	
 	function Subtitle:Meeting(id,first,text,subtitleData)
-		
+		if PlayerController:IsCameraOn() or PlayerController:IsAlbumOn() or PlayerController:IsInteractionOn() then
+			return
+		end
+
+		PlayerController:ChooseMode()
+		PlayerController.AllowMove = false
+		PlayerController:SetDialogOn(true)
+
 		local i=1;
 		local isPrint=true;
 		local isOver=false;
@@ -89,8 +98,20 @@ local Subtitle = {}
 		
 		Input.OnKeyDown:Disconnect(Mouse_pressDown);
 		
-
+		PlayerController:SetDefault()
+		PlayerController:SetDialogOn(false)
 
 	end
+
+function Subtitle:MeetingInBlack(id,first,text,subtitleData,dialogBeginSec,blackEndSec)
+	BlackScreenController:Black()
+	wait(dialogBeginSec)
+    world.Resources.UI.DialogGUI:SetActive(true);
+	Subtitle:Meeting(id,first,text,subtitleData)
+    BlackScreenController:Black()
+	wait(blackEndSec)
+    world.Resources.UI.DialogGUI:SetActive(false);
+	BlackScreenController:DisableBlack()
+end
 	
 return Subtitle
