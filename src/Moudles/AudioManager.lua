@@ -67,8 +67,8 @@ function AudioManager:Breath()
 	Effect.Breath:Play()
 end
 
-function AudioManager:classRing()
-	Effect.classRing:Play()
+function AudioManager:ClassRing()
+	Effect.ClassRing:Play()
 end
 
 function AudioManager:AllTheF()
